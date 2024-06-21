@@ -44,7 +44,8 @@ const LoginForm = () => {
 
       toast.success(result?.message);
 
-      localStorage.setItem("_uAD", JSON.stringify(result?.data));
+      localStorage.setItem("_uAD", JSON.stringify(result?.data?.user));
+      localStorage.setItem("_uAT", JSON.stringify(result?.data?.token));
 
       router.replace("/properties");
     } catch (error: any) {

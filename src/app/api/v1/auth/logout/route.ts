@@ -1,21 +1,28 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
+    await cookies().delete("token");
+
     return NextResponse.json(
       {
-        message: "Logout Successfully!",
         success: true,
+        message: "Logged out successfully",
       },
-      { status: 200 }
+      {
+        status: 200,
+      }
     );
   } catch (error: any) {
     return NextResponse.json(
       {
-        message: error?.message,
         success: false,
+        message: error.message,
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }

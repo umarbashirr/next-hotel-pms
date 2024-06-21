@@ -5,8 +5,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import LoadingButton from "./LoadingButton";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 
 const Header = ({ propertyId }: { propertyId: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

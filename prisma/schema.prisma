@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String      @id @default(cuid())
+  email     String      @unique
+  name      String?
+  password  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  hotels    UserHotel[]
+}
+
+model Hotel {
+  id        String      @id @default(cuid())
+  name      String      @unique
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  users     UserHotel[]
+}
+
+model UserHotel {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  hotelId   String
+  role      Role     @default(FRONT_OFFICE)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  FRONT_OFFICE
+  ADMIN
+  HOTEL_MANAGER
+  BOT
+}

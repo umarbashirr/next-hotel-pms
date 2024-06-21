@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('FRONT_OFFICE', 'ADMIN', 'HOTEL_MANAGER', 'BOT');
+
+-- AlterTable
+ALTER TABLE "UserHotel" ADD COLUMN     "role" "Role" NOT NULL DEFAULT 'FRONT_OFFICE';

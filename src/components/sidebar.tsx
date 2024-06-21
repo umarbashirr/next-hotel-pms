@@ -12,10 +12,17 @@ const Sidebar = () => {
       path: "overview",
     },
     {
-      label: "Guest List",
-      path: "guest-list",
+      label: "Guest Movement",
+      path: "guest-movement",
     },
-
+    {
+      label: "Guests List",
+      path: "guests-list",
+    },
+    {
+      label: "Room List",
+      path: "room-list",
+    },
     {
       label: "New Reservation",
       path: "new-reservation",
