@@ -11,7 +11,7 @@ const Header = ({ propertyId }: { propertyId: string }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const path = usePathname();
   const router = useRouter();
-  const isConfigured = location.pathname.includes("configure");
+  const isConfigured = path.includes("configure");
 
   const logoutHandler = async () => {
     const url = process.env.NEXT_PUBLIC_APP_URL + "/api/v1/auth/logout";

@@ -39,8 +39,8 @@ const Sidebar = () => {
       path: "configure/users",
     },
     {
-      label: "property",
-      path: "configure/property",
+      label: "Manage Property",
+      path: "configure/manage-property",
     },
 
     {

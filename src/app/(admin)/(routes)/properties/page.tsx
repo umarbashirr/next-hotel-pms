@@ -52,6 +52,8 @@ const PropertiesPage = () => {
               <Image
                 src={property?.hotel?.image || "/images/hotel-image.jpg"}
                 fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 alt="Hotel Image"
                 className="object-cover rounded-lg"
               />
