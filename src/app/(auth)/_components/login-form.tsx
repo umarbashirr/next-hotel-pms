@@ -32,21 +32,10 @@ const LoginForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const url = process.env.NEXT_PUBLIC_APP_URL + "/api/v1/auth/login";
     try {
-      const response = await axios.post(url, values, {
+      await axios.post(url, values, {
         withCredentials: true,
       });
-
-      const result = await response.data;
-
-      if (!result?.success) {
-        throw new Error(result?.message);
-      }
-
-      toast.success(result?.message);
-
-      localStorage.setItem("_uAD", JSON.stringify(result?.data?.user));
-      localStorage.setItem("_uAT", JSON.stringify(result?.data?.token));
-
+      console.log("hi");
       router.replace("/properties");
     } catch (error: any) {
       console.error(error?.message);
