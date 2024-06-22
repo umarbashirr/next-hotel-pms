@@ -1,10 +1,15 @@
+import { auth } from "@/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const GlobalAdminLayout = ({ children }: { children: React.ReactNode }) => {
-  const token = cookies().get("token")?.value;
+const GlobalAdminLayout = async ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const session = await auth();
 
-  if (!token) {
+  if (!session) {
     redirect("/login");
   }
 

@@ -2,36 +2,15 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import prisma from "@/lib/db";
+import { auth } from "@/auth";
 
 export async function GET(req: NextRequest) {
   try {
-    const token = cookies().get("token")?.value;
-
-    if (!token) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Unauthorized",
-        },
-        { status: 401 }
-      );
-    }
-
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-
-    if (!decoded) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid token",
-        },
-        { status: 401 }
-      );
-    }
+    const session = await auth();
 
     const hotels = await prisma.userHotel.findMany({
       where: {
-        userId: decoded.id,
+        userId: session?.user?.id,
       },
       select: {
         hotel: true,

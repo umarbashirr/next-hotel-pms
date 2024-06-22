@@ -9,13 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import AccessForm from "../_components/AccessForm";
 import AddNewUser from "../_components/AddNewUser";
+import { fetchUsersForProperty } from "./actions";
 
-const UsersListPage = () => {
+const UsersListPage = ({ params }: { params: { id: string } }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -27,25 +27,19 @@ const UsersListPage = () => {
   };
 
   const fetchUsers = async () => {
-    try {
-      const response = await axios.get(
-        process.env.NEXT_PUBLIC_APP_URL! + "/api/v1/users",
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response?.status !== 200) throw new Error(response?.data?.message);
-
-      const users = response?.data?.data;
-
-      setUsers(users);
-    } catch (error: any) {
-      console.error(error?.message);
-      toast.error(error?.message);
-    } finally {
-      setIsLoading(false);
-    }
+    fetchUsersForProperty(params.id)
+      .then((res) => {
+        setUsers(res.data);
+        console.log(res.message);
+        toast.success(res.message);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -63,7 +57,7 @@ const UsersListPage = () => {
                 Here you can manage all your users for current property
               </CardDescription>
             </div>
-            <AddNewUser />
+            <AddNewUser propertyId={params?.id} />
           </div>
         </CardHeader>
         <CardContent className=" overflow-auto">
@@ -109,7 +103,12 @@ const UsersListPage = () => {
           description="Fill the form to edit user details"
           setOpen={() => setIsEditing(false)}
         >
-          <AccessForm isEditing={isEditing} user={selectedUser} />
+          <AccessForm
+            isEditing={isEditing}
+            user={selectedUser}
+            propertyId={params.id}
+            closeModal={setIsEditing}
+          />
         </Modal>
       )}
     </div>

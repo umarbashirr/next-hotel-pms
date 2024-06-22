@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import AccessForm from "./AccessForm";
 import { useState } from "react";
 
-const AddNewUser = () => {
+const AddNewUser = ({ propertyId }: { propertyId: string }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   return (
     <div>
@@ -16,7 +16,12 @@ const AddNewUser = () => {
         description="Fill in the details below to add a new user."
         setOpen={() => setShowModal(false)}
       >
-        <AccessForm isEditing={false} user={null} />
+        <AccessForm
+          isEditing={false}
+          user={null}
+          propertyId={propertyId}
+          closeModal={setShowModal}
+        />
       </Modal>
     </div>
   );

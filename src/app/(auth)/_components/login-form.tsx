@@ -1,14 +1,13 @@
 "use client";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import LoadingButton from "@/components/LoadingButton";
 import TextInput from "@/components/TextInput";
 import { Form } from "@/components/ui/form";
-import LoadingButton from "@/components/LoadingButton";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { loginUser } from "../actions";
+import { useTransition } from "react";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -20,7 +19,7 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
-  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,17 +29,9 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const url = process.env.NEXT_PUBLIC_APP_URL + "/api/v1/auth/login";
-    try {
-      await axios.post(url, values, {
-        withCredentials: true,
-      });
-      console.log("hi");
-      router.replace("/properties");
-    } catch (error: any) {
-      console.error(error?.message);
-      toast.error(error?.message);
-    }
+    startTransition(() => {
+      loginUser(values.email, values.password);
+    });
   };
 
   return (
@@ -51,17 +42,19 @@ const LoginForm = () => {
           control={form.control}
           label="Email"
           type="email"
+          disabled={isPending}
         />
         <TextInput
           name="password"
           control={form.control}
           label="password"
           type="password"
+          disabled={isPending}
         />
         <LoadingButton
-          disabled={form.formState.isSubmitting}
+          disabled={isPending}
           loadingText="Logging in..."
-          isLoading={form.formState.isSubmitting}
+          isLoading={isPending}
           type="submit"
         >
           Login now
