@@ -4,44 +4,29 @@ import { Button } from "./ui/button";
 import toast from "react-hot-toast";
 import axios from "axios";
 import LoadingButton from "./LoadingButton";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { logoutUser } from "@/app/(auth)/actions";
 
 const Header = ({ propertyId }: { propertyId: string }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
   const path = usePathname();
   const router = useRouter();
   const isConfigured = path.includes("configure");
 
   const logoutHandler = async () => {
-    const url = process.env.NEXT_PUBLIC_APP_URL + "/api/v1/auth/logout";
-    setIsLoading(true);
-    try {
-      const response = await axios.post(
-        url,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-
-      const result = await response.data;
-
-      if (!result?.success) {
-        throw new Error(result?.message);
-      }
-
-      localStorage.clear();
-
-      router.push("/login");
-
-      toast.success(result?.message);
-    } catch (error: any) {
-      console.error(error?.message);
-      toast.error(error?.message);
-    } finally {
-      setIsLoading(false);
-    }
+    startTransition(() => {
+      logoutUser()
+        .then((data) => {
+          if (!data.success) {
+            throw new Error(data.error);
+          }
+        })
+        .catch((error) => {
+          console.error(error.message);
+          toast.error(error.message);
+        });
+    });
   };
 
   const switchMode = () => {
@@ -66,8 +51,8 @@ const Header = ({ propertyId }: { propertyId: string }) => {
           </Button>
         )}
         <LoadingButton
-          disabled={isLoading}
-          isLoading={isLoading}
+          disabled={isPending}
+          isLoading={isPending}
           loadingText="Please wait..."
           type="button"
           variant="destructive"

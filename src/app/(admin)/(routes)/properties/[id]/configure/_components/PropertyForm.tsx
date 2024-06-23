@@ -1,14 +1,14 @@
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
+import LoadingButton from "@/components/LoadingButton";
 import TextInput from "@/components/TextInput";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Form } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { updatePropertyDetails } from "../manage-property/actions";
+import { useTransition } from "react";
 import toast from "react-hot-toast";
-import { APP_URL } from "@/constants/url-config";
-import axios from "axios";
-import LoadingButton from "@/components/LoadingButton";
 
 const propertyFormSchema = z.object({
   name: z
@@ -46,7 +46,8 @@ const PropertyForm = ({
   hotel,
   setIsEditing,
 }: PropertyFormProps) => {
-  const navigation = useNavigate();
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const form = useForm<z.infer<typeof propertyFormSchema>>({
     resolver: zodResolver(propertyFormSchema),
     defaultValues: {
@@ -76,25 +77,20 @@ const PropertyForm = ({
   const onSubmit = async (values: z.infer<typeof propertyFormSchema>) => {
     const transformedData = transformData(values);
 
-    try {
-      const url = `${APP_URL.main}${APP_URL.api}${APP_URL.path.hotels}${APP_URL.path.HOTEL}/${hotel._id}`;
-      const response = await axios.put(url, transformedData, {
-        withCredentials: true,
-      });
-
-      if (response.status !== 200) {
-        throw new Error(
-          response?.data?.message || "Failed to update property details"
-        );
-      }
-
-      toast.success("Property details updated successfully");
-      setIsEditing(false);
-      navigation(0);
-    } catch (error: any) {
-      console.error(error?.message);
-      toast.error(error?.message);
-    }
+    startTransition(() => {
+      updatePropertyDetails(hotel.id, transformedData)
+        .then((data) => {
+          if (!data.success) {
+            throw new Error(data.message);
+          }
+          cancelHandler();
+          toast.success(data.message);
+        })
+        .catch((error) => {
+          console.error(error.message);
+          toast.error(error.message);
+        });
+    });
   };
 
   const transformData = (values: z.infer<typeof propertyFormSchema>) => {
@@ -132,7 +128,7 @@ const PropertyForm = ({
 
   const cancelHandler = () => {
     setIsEditing(false);
-    navigation(0);
+    router.refresh();
   };
 
   return (
@@ -154,8 +150,8 @@ const PropertyForm = ({
             {isEditing ? (
               <LoadingButton
                 loadingText="Updating..."
-                disabled={form.formState.isSubmitting}
-                isLoading={form.formState.isSubmitting}
+                disabled={isPending}
+                isLoading={isPending}
                 type="submit"
               >
                 Update now
