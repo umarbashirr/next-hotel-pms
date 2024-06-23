@@ -31,25 +31,29 @@ const Sidebar = () => {
       label: "Reports",
       path: "reports",
     },
+    {
+      label: "Properties",
+      path: "/properties",
+    },
   ];
 
   const configureRoutes = [
     {
       label: "users",
-      path: "configure/users",
+      path: "users",
     },
     {
       label: "Manage Property",
-      path: "configure/manage-property",
+      path: "manage-property",
     },
 
     {
       label: "Room Types",
-      path: "configure/room-types",
+      path: "room-types",
     },
     {
       label: "rooms",
-      path: "configure/rooms",
+      path: "rooms",
     },
   ];
 
