@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import RoomTypeForm from "./RoomTypeForm";
 
-const AddNewRoomType = () => {
+const AddNewRoomType = ({ propertyId }: { propertyId: string }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   return (
     <div>
@@ -14,7 +14,12 @@ const AddNewRoomType = () => {
         description="Fill in the details below to add a new room type."
         setOpen={() => setShowModal(false)}
       >
-        <RoomTypeForm isEditing={false} type={null} />
+        <RoomTypeForm
+          isEditing={false}
+          type={null}
+          propertyId={propertyId}
+          closeModal={setShowModal}
+        />
       </Modal>
     </div>
   );
