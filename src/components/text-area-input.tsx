@@ -21,6 +21,7 @@ interface TextInputProps {
   className?: string;
   labelClass?: string;
   inputClass?: string;
+  disabled?: boolean;
 }
 
 const TextAreaInput = ({
@@ -33,6 +34,7 @@ const TextAreaInput = ({
   className,
   labelClass,
   inputClass,
+  disabled,
 }: TextInputProps) => {
   return (
     <FormField
@@ -49,6 +51,7 @@ const TextAreaInput = ({
               placeholder={placeholder}
               rows={rows}
               {...field}
+              disabled={disabled}
             />
           </FormControl>
           {desc && <FormDescription>{desc}</FormDescription>}

@@ -18,6 +18,7 @@ interface TextInputProps {
   disabled?: boolean;
   min?: number;
   max?: number;
+  className?: string;
 }
 
 const TextInput = ({
@@ -29,13 +30,14 @@ const TextInput = ({
   placeholder,
   min,
   max,
+  className,
 }: TextInputProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={className}>
           <FormLabel className="capitalize">{label}</FormLabel>
           <FormControl>
             <Input
