@@ -15,6 +15,8 @@ export const fetchCurrentPropertyDetails = async (propertyId: string) => {
       };
     }
 
+    console.log(session.user.hotels);
+
     const hasAccess = await session.user.hotels.some(
       (user: any) =>
         user.hotelId === propertyId &&
@@ -24,7 +26,7 @@ export const fetchCurrentPropertyDetails = async (propertyId: string) => {
     if (!hasAccess) {
       return {
         success: false,
-        message: "You are not allowed to complete this operation",
+        message: "Only Admins are allowed to complete this operation",
       };
     }
 

@@ -15,10 +15,12 @@ export const VerifyUserConfigureAccess = async (propertyId: string) => {
       (user.role === "ADMIN" || user.role === "BOT")
   );
 
+  console.log(session.user.hotels);
+
   if (!hasAccess) {
     return {
       success: false,
-      message: "You are not allowed to complete this operation",
+      message: "Only Admins are allowed to complete this operation",
     };
   }
 

@@ -112,7 +112,7 @@ model RoomType {
   roomTypeCode String
   description  String?
   Hotel        Hotel    @relation(fields: [hotelId], references: [id])
-  hotelId      String   @unique
+  hotelId      String
   price        Float
   checkInTime  String
   checkOutTime String
