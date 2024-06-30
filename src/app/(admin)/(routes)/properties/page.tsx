@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import axiosInstance from "@/lib/axios-instance";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,9 +14,7 @@ const PropertiesPage = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get("/api/v1/hotels/all", {
-        withCredentials: true,
-      });
+      const response = await axiosInstance.get("/hotels");
 
       const result = response.data;
 
@@ -44,8 +43,8 @@ const PropertiesPage = () => {
     <div className="p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
       {properties.map((property: any) => (
         <Link
-          key={property?.hotel.id}
-          href={`/properties/${property?.hotel.id}`}
+          key={property?.hotel._id}
+          href={`/properties/${property?.hotel._id}`}
         >
           <Card className="p-4">
             <div className="relative w-full min-h-[250px]">
@@ -59,7 +58,9 @@ const PropertiesPage = () => {
               />
             </div>
             <div className="mt-4 px-2">
-              <h3 className="font-semibold">{property?.hotel?.name}</h3>
+              <h3 className="font-semibold capitalize">
+                {property?.hotel?.name}
+              </h3>
             </div>
           </Card>
         </Link>

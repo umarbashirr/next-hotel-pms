@@ -2,6 +2,7 @@
 
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,6 +20,7 @@ interface TextInputProps {
   min?: number;
   max?: number;
   className?: string;
+  description?: string;
 }
 
 const TextInput = ({
@@ -31,6 +33,7 @@ const TextInput = ({
   min,
   max,
   className,
+  description,
 }: TextInputProps) => {
   return (
     <FormField
@@ -49,6 +52,9 @@ const TextInput = ({
               {...field}
             />
           </FormControl>
+          {description && (
+            <FormDescription className="ml-1">{description}</FormDescription>
+          )}
           <FormMessage />
         </FormItem>
       )}

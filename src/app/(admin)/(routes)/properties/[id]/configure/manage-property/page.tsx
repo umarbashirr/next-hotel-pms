@@ -9,28 +9,32 @@ import {
 } from "@/components/ui/card";
 import PropertyForm from "../_components/PropertyForm";
 import { useEffect, useState, useTransition } from "react";
-import { fetchCurrentPropertyDetails } from "./actions";
+import toast from "react-hot-toast";
+import axiosInstance from "@/lib/axios-instance";
 
 export default function ManageProperty({ params }: { params: { id: string } }) {
-  const [pending, setTransition] = useTransition();
+  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [hotelDetails, setHotelDetails] = useState<any>({});
 
   const fetchHotelDetails = async () => {
-    setTransition(() => {
-      fetchCurrentPropertyDetails(params.id)
-        .then((data) => {
-          if (!data.success) {
-            throw new Error(data.message);
-          }
+    try {
+      const response = await axiosInstance.get(`/hotels/hotel/${params.id}`);
+      const result = response.data;
 
-          console.log(data?.data);
-          setHotelDetails(data?.data);
-        })
-        .catch((error) => {
-          console.error(error.message);
-        });
-    });
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      setHotelDetails(result.data?.hotel);
+
+      toast.success(result.message);
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -51,7 +55,7 @@ export default function ManageProperty({ params }: { params: { id: string } }) {
           </div>
         </CardHeader>
         <CardContent>
-          {!pending && (
+          {!loading && (
             <PropertyForm
               hotel={hotelDetails}
               isEditing={isEditing}

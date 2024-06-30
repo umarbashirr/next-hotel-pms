@@ -28,6 +28,23 @@ const Sidebar = () => {
       path: "new-reservation",
     },
     {
+      label: "Occupancy",
+      path: "occupancy",
+    },
+    {
+      label: "Reports",
+      path: "reports",
+    },
+    {
+      label: "Individual Profile",
+      path: "profiles/individual",
+    },
+
+    {
+      label: "Company Profile",
+      path: "profiles/company",
+    },
+    {
       label: "Reports",
       path: "reports",
     },

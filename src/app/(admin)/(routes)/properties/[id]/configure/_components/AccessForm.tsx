@@ -8,7 +8,6 @@ import { UserRoles } from "@/constants/user-roles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { addNewUserToProperty } from "../users/actions";
 import toast from "react-hot-toast";
 
 const formSchema = z.object({
@@ -46,21 +45,7 @@ const AccessForm = ({
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log({ ...values, propertyId });
-    if (!isEditing) {
-      addNewUserToProperty({ ...values, propertyId })
-        .then((data) => {
-          form.reset();
-          toast.success(data.message);
-          closeModal(false);
-        })
-        .catch((error) => {
-          console.error(error?.message);
-          toast.error(error.message);
-        });
-    }
-  }
+  async function onSubmit(values: z.infer<typeof formSchema>) {}
 
   return (
     <Form {...form}>

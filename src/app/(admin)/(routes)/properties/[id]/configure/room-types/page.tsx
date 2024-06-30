@@ -9,12 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import axiosInstance from "@/lib/axios-instance";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import AddNewRoomType from "../_components/AddNewRoomType";
 import RoomTypeForm from "../_components/RoomTypeForm";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { convert24HourTo12Hour } from "@/helpers/convert-time";
 
 const RoomTypesPage = ({ params }: { params: { id: string } }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -30,8 +29,8 @@ const RoomTypesPage = ({ params }: { params: { id: string } }) => {
   const fetchUsers = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(
-        `/api/v1/room-types/all?propertyId=${params.id}`
+      const response = await axiosInstance.get(
+        `/room-types?propertyId=${params.id}`
       );
 
       const result = response.data;
@@ -89,16 +88,16 @@ const RoomTypesPage = ({ params }: { params: { id: string } }) => {
                       {type?.name}
                     </td>
                     <td className="border px-4 py-2 text-start">
-                      {type?.roomTypeCode}
+                      {type?.code}
                     </td>
                     <td className="border px-4 py-2 text-start">
-                      {type?.price}
+                      {type?.basePrice}
                     </td>
                     <td className="border px-4 py-2 text-start">
-                      {type?.checkInTime}
+                      {type?.checkinTime}
                     </td>
                     <td className="border px-4 py-2 text-start">
-                      {type?.checkOutTime}
+                      {type?.checkoutTime}
                     </td>
                     <td className="px-4 py-2 flex items-center justify-center">
                       <Button size="sm" onClick={() => editHandler(type)}>

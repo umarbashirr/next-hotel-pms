@@ -23,6 +23,7 @@ interface DateInputProps {
   desc?: string;
   className?: string;
   labelClass?: string;
+  disabled?: boolean;
 }
 
 const DateInput = ({
@@ -33,6 +34,7 @@ const DateInput = ({
   desc,
   className,
   labelClass,
+  disabled = false,
 }: DateInputProps) => {
   return (
     <FormField
@@ -49,6 +51,7 @@ const DateInput = ({
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
+                  disabled={disabled}
                   variant={"outline"}
                   className={cn(
                     "flex items-center w-full pl-3 text-left font-normal",

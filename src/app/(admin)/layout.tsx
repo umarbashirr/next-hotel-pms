@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -7,11 +6,9 @@ const GlobalAdminLayout = async ({
 }: {
   children: React.ReactNode;
 }) => {
-  const session = await auth();
+  const token = cookies().get("token")?.value;
 
-  console.log(session)
-
-  if (!session) {
+  if (!token) {
     redirect("/login");
   }
 

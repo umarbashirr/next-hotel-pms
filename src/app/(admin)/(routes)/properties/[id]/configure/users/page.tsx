@@ -10,10 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import AccessForm from "../_components/AccessForm";
 import AddNewUser from "../_components/AddNewUser";
-import { fetchUsersForProperty } from "./actions";
 
 const UsersListPage = ({ params }: { params: { id: string } }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -26,21 +24,7 @@ const UsersListPage = ({ params }: { params: { id: string } }) => {
     setSelectedUser(user);
   };
 
-  const fetchUsers = async () => {
-    fetchUsersForProperty(params.id)
-      .then((res) => {
-        setUsers(res.data);
-        console.log(res.message);
-        toast.success(res.message);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast.error(err.message);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  const fetchUsers = async () => {};
 
   useEffect(() => {
     fetchUsers();

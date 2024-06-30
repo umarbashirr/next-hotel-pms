@@ -3,11 +3,14 @@
 import LoadingButton from "@/components/LoadingButton";
 import TextInput from "@/components/TextInput";
 import { Form } from "@/components/ui/form";
+import axiosInstance from "@/lib/axios-instance";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { loginUser } from "../actions";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { z } from "zod";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -19,7 +22,7 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
-  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,9 +32,21 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    startTransition(() => {
-      loginUser(values.email, values.password);
-    });
+    try {
+      const response = await axiosInstance.post("/auth/login", values);
+
+      const result = response.data;
+
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+
+      toast.success(result.message);
+      router.push("/properties");
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -42,19 +57,19 @@ const LoginForm = () => {
           control={form.control}
           label="Email"
           type="email"
-          disabled={isPending}
+          disabled={form.formState.isSubmitting}
         />
         <TextInput
           name="password"
           control={form.control}
           label="password"
           type="password"
-          disabled={isPending}
+          disabled={form.formState.isSubmitting}
         />
         <LoadingButton
-          disabled={isPending}
+          disabled={form.formState.isSubmitting}
           loadingText="Logging in..."
-          isLoading={isPending}
+          isLoading={form.formState.isSubmitting}
           type="submit"
         >
           Login now

@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { updatePropertyDetails } from "../manage-property/actions";
 import { useTransition } from "react";
 import toast from "react-hot-toast";
 
@@ -76,21 +75,6 @@ const PropertyForm = ({
 
   const onSubmit = async (values: z.infer<typeof propertyFormSchema>) => {
     const transformedData = transformData(values);
-
-    startTransition(() => {
-      updatePropertyDetails(hotel.id, transformedData)
-        .then((data) => {
-          if (!data.success) {
-            throw new Error(data.message);
-          }
-          cancelHandler();
-          toast.success(data.message);
-        })
-        .catch((error) => {
-          console.error(error.message);
-          toast.error(error.message);
-        });
-    });
   };
 
   const transformData = (values: z.infer<typeof propertyFormSchema>) => {

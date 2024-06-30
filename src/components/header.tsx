@@ -1,12 +1,12 @@
 "use client";
 
+import { RefreshCcw } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useTransition } from "react";
+import LoadingButton from "./LoadingButton";
 import { Button } from "./ui/button";
 import toast from "react-hot-toast";
-import axios from "axios";
-import LoadingButton from "./LoadingButton";
-import { useState, useTransition } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { logoutUser } from "@/app/(auth)/actions";
+import axiosInstance from "@/lib/axios-instance";
 
 const Header = ({ propertyId }: { propertyId: string }) => {
   const [isPending, startTransition] = useTransition();
@@ -15,18 +15,16 @@ const Header = ({ propertyId }: { propertyId: string }) => {
   const isConfigured = path.includes("configure");
 
   const logoutHandler = async () => {
-    startTransition(() => {
-      logoutUser()
-        .then((data) => {
-          if (!data.success) {
-            throw new Error(data.error);
-          }
-        })
-        .catch((error) => {
-          console.error(error.message);
-          toast.error(error.message);
+    try {
+      startTransition(() => {
+        axiosInstance.post("/auth/logout").then(() => {
+          router.push("/login");
         });
-    });
+      });
+    } catch (error: any) {
+      console.error(error.message);
+      toast.error(error.message);
+    }
   };
 
   const switchMode = () => {
@@ -39,7 +37,16 @@ const Header = ({ propertyId }: { propertyId: string }) => {
 
   return (
     <header className="flex items-center justify-between gap-4 h-16 border-b px-6">
-      <p>Search bar will come here</p>
+      <div className="flex items-center justify-start gap-4">
+        <h1 className="text-xl font-semibold">Hotel Management System</h1>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => window.location.reload()}
+        >
+          <RefreshCcw size={24} />
+        </Button>
+      </div>
       <div className="flex items-center justify-end gap-4">
         {!isConfigured ? (
           <Button variant="outline" onClick={switchMode}>

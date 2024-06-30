@@ -3,6 +3,7 @@ import TextAreaInput from "@/components/text-area-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { convert24HourTo12Hour } from "@/helpers/convert-time";
+import axiosInstance from "@/lib/axios-instance";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import React from "react";
@@ -37,10 +38,10 @@ const RoomTypeForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: type?.name || "",
-      code: type?.roomTypeCode || "",
-      basePrice: type?.price || "",
-      checkinTime: type?.checkInTime || "",
-      checkoutTime: type?.checkOutTime || "",
+      code: type?.code || "",
+      basePrice: type?.basePrice || "",
+      checkinTime: type?.checkinTime || "",
+      checkoutTime: type?.checkoutTime || "",
     },
   });
 
@@ -48,28 +49,20 @@ const RoomTypeForm = ({
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const valuesToSubmit = {
-      name: values?.name,
-      roomTypeCode: values?.code,
-      price: values?.basePrice,
-      checkInTime: values?.checkinTime,
-      checkOutTime: values?.checkoutTime,
+      ...values,
       propertyId,
     };
-    console.log(valuesToSubmit);
 
     try {
       let response;
 
       if (isEditing) {
-        response = await axios.put(
-          `/api/v1/room-types/${type.id}`,
+        response = await axiosInstance.put(
+          `/room-types/${type._id}?propertyId=${propertyId}`,
           valuesToSubmit
         );
       } else {
-        response = await axios.post(
-          "/api/v1/room-types/create",
-          valuesToSubmit
-        );
+        response = await axiosInstance.post("/room-types", valuesToSubmit);
       }
 
       const result = response.data;
@@ -104,14 +97,6 @@ const RoomTypeForm = ({
           control={form.control}
           label="Room Type Code"
           type="text"
-          disabled={form.formState.isSubmitting}
-        />
-        <TextAreaInput
-          name="description"
-          control={form.control}
-          label="Description"
-          rows={5}
-          className="col-span-2"
           disabled={form.formState.isSubmitting}
         />
         <TextInput
