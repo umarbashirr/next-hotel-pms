@@ -5,9 +5,7 @@ import TextInput from "@/components/TextInput";
 import { Form } from "@/components/ui/form";
 import axiosInstance from "@/lib/axios-instance";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -44,8 +42,8 @@ const LoginForm = () => {
       toast.success(result.message);
       router.push("/properties");
     } catch (error: any) {
-      console.error(error.message);
-      toast.error(error.message);
+      console.error(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
 

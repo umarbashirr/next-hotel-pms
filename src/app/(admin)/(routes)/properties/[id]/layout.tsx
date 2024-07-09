@@ -11,7 +11,7 @@ const SinglePropertyLayout = ({
 }) => {
   return (
     <div>
-      <Sidebar />
+      <Sidebar propertyId={params?.id} />
       <div className="pl-72">
         <Header propertyId={params?.id} />
         <div className="p-6">{children}</div>

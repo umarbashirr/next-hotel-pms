@@ -1,5 +1,4 @@
 import axios from "axios";
-import { redirect } from "next/navigation";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_APP_URL + "/api/v1", // Replace with your API base URL
@@ -17,10 +16,13 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.data?.message === "jwt expired") {
+    if (
+      error.response?.data?.message === "jwt expired" ||
+      error.response?.data?.message === "Invalid token"
+    ) {
       console.error("jwt expired");
       axiosInstance.post("/auth/logout").then(() => {
-        redirect("/login");
+        window.location.href = "/login";
       });
     }
 

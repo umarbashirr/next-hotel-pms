@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import axios from "axios";
+import axiosInstance from "@/lib/axios-instance";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -18,7 +18,9 @@ const RoomListPage = ({ params }: { params: { id: string } }) => {
   const fetchRooms = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`/api/v1/rooms?propertyId=${params.id}`);
+      const response = await axiosInstance.get(
+        `/rooms?propertyId=${params.id}`
+      );
       const result = response.data;
       if (!result.success) {
         throw new Error(result.message);
@@ -51,9 +53,9 @@ const RoomListPage = ({ params }: { params: { id: string } }) => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {rooms.map((room: any) => (
-              <div key={room.id} className="p-6 rounded shadow-sm border">
-                <p>{room.roomCode}</p>
-                <p>{room.roomType.name}</p>
+              <div key={room?._id} className="p-6 rounded shadow-sm border">
+                <p>{room?.code}</p>
+                <p>{room?.category?.name}</p>
               </div>
             ))}
           </div>

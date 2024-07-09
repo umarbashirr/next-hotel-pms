@@ -15,12 +15,20 @@ interface ModalProps {
   children: ReactNode;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: string;
 }
 
-const Modal = ({ title, description, children, open, setOpen }: ModalProps) => {
+const Modal = ({
+  title,
+  description,
+  children,
+  open,
+  setOpen,
+  className,
+}: ModalProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent className={className}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

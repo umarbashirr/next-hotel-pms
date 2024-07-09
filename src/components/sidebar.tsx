@@ -4,73 +4,69 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const Sidebar = () => {
+const Sidebar = ({ propertyId }: { propertyId: string }) => {
   const location = usePathname();
   const frontdeskRoutes = [
     {
       label: "Overview",
-      path: "overview",
+      path: `/properties/${propertyId}/overview`,
     },
     {
       label: "Guest Movement",
-      path: "guest-movement",
+      path: `/properties/${propertyId}/guest-movement`,
     },
     {
       label: "Guests List",
-      path: "guests-list",
+      path: `/properties/${propertyId}/guests-list`,
     },
     {
       label: "Room List",
-      path: "room-list",
+      path: `/properties/${propertyId}/room-list`,
     },
     {
       label: "New Reservation",
-      path: "new-reservation",
+      path: `/properties/${propertyId}/new-reservation`,
     },
     {
       label: "Occupancy",
-      path: "occupancy",
+      path: `/properties/${propertyId}/occupancy`,
     },
     {
       label: "Reports",
-      path: "reports",
+      path: `/properties/${propertyId}/reports`,
     },
     {
       label: "Individual Profile",
-      path: "profiles/individual",
+      path: `/properties/${propertyId}/profiles/individual`,
     },
 
     {
       label: "Company Profile",
-      path: "profiles/company",
-    },
-    {
-      label: "Reports",
-      path: "reports",
+      path: `/properties/${propertyId}/profiles/company`,
     },
     {
       label: "Properties",
-      path: "/properties",
+      path: `/properties`,
     },
   ];
 
   const configureRoutes = [
     {
       label: "users",
-      path: "users",
+      path: `/properties/${propertyId}/configure/users`,
     },
     {
       label: "Manage Property",
-      path: "manage-property",
+      path: `/properties/${propertyId}/configure/manage-property`,
     },
 
     {
       label: "Room Types",
-      path: "room-types",
+      path: `/properties/${propertyId}/configure/room-types`,
     },
     {
       label: "rooms",
-      path: "rooms",
+      path: `/properties/${propertyId}/configure/rooms`,
     },
   ];
 
